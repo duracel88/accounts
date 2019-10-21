@@ -54,10 +54,10 @@ public class TransferMoneyService {
 
     private void checkCurrency(Currency currency, Account from, Account to){
         if( ! from.supports(currency)){
-            throw new DifferentCurrenciesException("Source account not supports currency " + currency);
+            throw new DifferentCurrenciesException("Source account doesn't support currency " + currency);
         }
         if( ! to.supports(currency)){
-            throw new DifferentCurrenciesException("Target account not supports currency " + currency);
+            throw new DifferentCurrenciesException("Target account doesn't support currency " + currency);
         }
     }
 
