@@ -10,4 +10,5 @@ public interface TransferHistoryRepository {
 
     TransferId store(CommittedTransfer transferHistory);
     List<TransferHistory> findAll();
+    TransferHistory findById(TransferId transferId);
 }

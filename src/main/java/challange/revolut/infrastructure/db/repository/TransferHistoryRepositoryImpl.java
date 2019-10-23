@@ -40,4 +40,11 @@ public class TransferHistoryRepositoryImpl implements TransferHistoryRepository 
                 .map(mapper::toDomainModel)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public TransferHistory findById(TransferId transferId) {
+        EntityManager em = emP.get();
+        TransferHistoryEntity e = em.find(TransferHistoryEntity.class, transferId.getId());
+        return mapper.toDomainModel(e);
+    }
 }
