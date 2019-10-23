@@ -16,6 +16,7 @@ import challange.revolut.domain.repository.TransferHistoryRepository;
 import challange.revolut.domain.valueobject.TransferId;
 import challange.revolut.ui.GetHandler;
 import challange.revolut.ui.transfer.dto.TransferHistoryDTO;
+import lombok.SneakyThrows;
 
 import static java.util.stream.Collectors.toList;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -45,7 +46,7 @@ public class TransferGetHandler implements GetHandler {
     private void getAll(HttpServletResponse resp) throws IOException{
         List<TransferHistory> history = repository.findAll();
         List<TransferHistoryDTO> dtos = history.stream()
-                .map(this::map)
+                .map(this::dto)
                 .collect(toList());
 
         resp.setStatus(SC_OK);
@@ -53,13 +54,26 @@ public class TransferGetHandler implements GetHandler {
     }
 
     private void getById(UUID id, HttpServletResponse resp) throws IOException {
-        TransferHistory h = repository.findById(new TransferId(id));
-        TransferHistoryDTO dto = map(h);
-        resp.setStatus(SC_OK);
-        objectMapper.writeValue(resp.getWriter(), dto);
+        repository.findById(new TransferId(id))
+                .map( this::dto )
+                .ifPresentOrElse(
+                        b -> doReturn(b, resp),
+                        () -> doReturnNothing(resp));
     }
 
-    private TransferHistoryDTO map(TransferHistory h){
+    @SneakyThrows
+    private void doReturn(TransferHistoryDTO dto, HttpServletResponse response){
+        response.setStatus(SC_OK);
+        objectMapper.writeValue(response.getWriter(), dto);
+    }
+
+    @SneakyThrows
+    private void doReturnNothing(HttpServletResponse response){
+        response.setStatus(SC_OK);
+    }
+
+
+    private TransferHistoryDTO dto(TransferHistory h){
         return TransferHistoryDTO.builder()
                 .id(h.getTransferId().getId())
                 .to(h.getCommittedTransfer().getAccountTo().getId())

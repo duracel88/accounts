@@ -1,6 +1,7 @@
 package challange.revolut.domain.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import challange.revolut.domain.CommittedTransfer;
 import challange.revolut.domain.TransferHistory;
@@ -10,5 +11,5 @@ public interface TransferHistoryRepository {
 
     TransferId store(CommittedTransfer transferHistory);
     List<TransferHistory> findAll();
-    TransferHistory findById(TransferId transferId);
+    Optional<TransferHistory> findById(TransferId transferId);
 }

@@ -1,6 +1,7 @@
 package challange.revolut.infrastructure.db.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -42,9 +43,9 @@ public class TransferHistoryRepositoryImpl implements TransferHistoryRepository 
     }
 
     @Override
-    public TransferHistory findById(TransferId transferId) {
+    public Optional<TransferHistory> findById(TransferId transferId) {
         EntityManager em = emP.get();
         TransferHistoryEntity e = em.find(TransferHistoryEntity.class, transferId.getId());
-        return mapper.toDomainModel(e);
+        return Optional.ofNullable(e).map(mapper::toDomainModel);
     }
 }
