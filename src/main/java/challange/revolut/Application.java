@@ -2,6 +2,7 @@ package challange.revolut;
 
 
 import java.util.EnumSet;
+import java.util.stream.Stream;
 
 import javax.servlet.DispatcherType;
 
@@ -21,12 +22,13 @@ import static org.eclipse.jetty.servlet.ServletContextHandler.SESSIONS;
 
 public class Application {
 
-    private static final int PORT = 4200;
+    private static final int DEFAULT_PORT = 4200;
 
     @SneakyThrows
     public static void main(String[] args) {
         createInjector();
-        startHttpServer(PORT).join();
+
+        startHttpServer(getPort(args)).join();
     }
 
     private static void createInjector() {
@@ -43,6 +45,15 @@ public class Application {
         server.start();
         return server;
 
+    }
+
+    private static int getPort(String[] args) {
+        return Stream.of(args)
+                .filter(a -> a.startsWith("--port="))
+                .map(a -> a.split("--port=")[1])
+                .findFirst()
+                .map(Integer::valueOf)
+                .orElse(DEFAULT_PORT);
     }
 
 }

@@ -6,6 +6,14 @@ Tech stack:
 - Hibernate Validation
 - Guice servlet integration
 
+## Quick start
+
+### default port 4200
+mvn exec:java 
+
+### specific port
+mvn exec:java -Dexec.args="--port=4201"
+
 ## API
 
 ### GET /account/{id}
